@@ -24,6 +24,16 @@ def bsearch( ll , start_end ,  x) :
 def binary_search(ll,x):
   return bsearch(ll,[ 0 , len(ll)-1] , x)
 
+# TODO: think of a way to verity that arraydict's keys are time -- for now 
+# only float check exists
+
+class WopDict: 
+   def __init__(self):
+       self.wopdict=dict()
+   def __getitem__(self,item):
+       return self.wopdict[item]
+
+
 class WindowOperator : 
    def __init__(self,sarray):
        self.sarray = sarray
@@ -42,13 +52,13 @@ class WindowOperator :
        i_wend = binary_search(self.sortedtimekeys,end)
        # Pretty smart. eh?
        return max(map(self.sarray.arraydict.get,self.sortedtimekeys[i_wstart:i_wend+1]))
-       
-def window_max(sarray, start_end ) : 
-   # sorted_timekeys= sorted(sarray.arraydict.keys()) # sarray's keys have to be time
-   # TODO: think of a way to verity that arraydict's keys are time -- for now 
-   # only float check exists
-   w = WindowOperator(sarray)
-   return  w.window_max(start_end)
+
+   def window_min(self,start_end): 
+       start = start_end[0]
+       end   = start_end[1]
+       i_wstart = binary_search (self.sortedtimekeys,start)      
+       i_wend = binary_search(self.sortedtimekeys,end)
+       return min(map(self.sarray.arraydict.get,self.sortedtimekeys[i_wstart:i_wend+1]))
 
 #ll = [ 1, 10,100 ]
 #pos = binary_search(ll,0)
