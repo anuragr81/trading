@@ -27,7 +27,8 @@ class ArrayManip:
 
 
 # # SortedArray stores an unsorted dict with it's key
-#   being the sortcol passed during the creation.
+#   being the sortcol passed during the creation. The sortco
+#   must be float.
 # # The sortcol is always the key and is excluded from the value
 class SortedArray : 
   def __init__(self,sortcol): 
@@ -36,14 +37,14 @@ class SortedArray :
 
   def addRow(self,row) :
     if len(self.arraydict) == 0 : 
-       self.arraydict[row[self.sortcol]] = row[0:self.sortcol]+row[self.sortcol+1:]
+       self.arraydict[float(row[self.sortcol])] = row[0:self.sortcol]+row[self.sortcol+1:]
        # self.firstkey=row[self.sortcol]
     else : 
        col_size=len(self.arraydict[self.arraydict.keys()[0]])+1
        if col_size != len(row) : 
           raise InvalidRowAddException(str(len(row)));
        else : 
-          self.arraydict[row[self.sortcol]] = row[0:self.sortcol]+row[self.sortcol+1:] # no duplicate keys are possible
+          self.arraydict[float(row[self.sortcol])] = row[0:self.sortcol]+row[self.sortcol+1:] # no duplicate keys are possible
 
   def addCol(self,col): 
       if col == self.sortcol : 
@@ -80,7 +81,7 @@ class SortedArray :
       wr = csv.reader(open(file,"r"),quotechar='|',quoting=csv.QUOTE_MINIMAL)
       self.arraydict={}
       for row in wr: 
-         self.arraydict[row[0]]=row[1:]
+         self.arraydict[float(row[0])]=row[1:]
 
 
 

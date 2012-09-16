@@ -8,7 +8,6 @@ def bsearch( ll , start_end ,  x) :
    start =  start_end [ 0 ] 
    end   =  start_end [ 1 ] 
    mid = (start+end)/2
-   #print "start=",start," end=",end," mid=",mid   
    if start > end : 
        return mid;
    else : 
@@ -27,6 +26,13 @@ class WindowOperator :
    def __init__(self,sarray):
        self.sarray = sarray
        self.sortedtimekeys = sarray.arraydict.keys()
+
+   def __getitem__(self,item):
+       return self.sarray.arraydict[item]
+
+   def closest_time(self,itime) :
+       return self.sortedtimekeys[binary_search (self.sortedtimekeys,itime)]
+
    def window_max(self,start_end): 
        start = start_end[0]
        end   = start_end[1]
@@ -37,7 +43,8 @@ class WindowOperator :
        
 def window_max(sarray, start_end ) : 
    # sorted_timekeys= sorted(sarray.arraydict.keys()) # sarray's keys have to be time
-   # TODO: think of a way to verity that arraydict's keys are time -- 
+   # TODO: think of a way to verity that arraydict's keys are time -- for now 
+   # only float check exists
    w = WindowOperator(sarray)
    return  w.window_max(start_end)
 
