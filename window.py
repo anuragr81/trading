@@ -12,9 +12,11 @@ def bsearch( ll , start_end ,  x) :
        return mid;
    else : 
          if x < ll[mid]  :
+	    #print "x(",x,") <  ll[mid=",mid,"] (",ll[mid],")"
             return bsearch(ll, [0, mid-1], x)  
          else: 
 	    if x > ll[mid] : 
+	       #print "x(",x,") >  ll[mid=",mid,"] (",ll[mid],")"
                return bsearch(ll, [ mid+1, end ], x)
 	    else : 
 	       return mid;
@@ -25,7 +27,7 @@ def binary_search(ll,x):
 class WindowOperator : 
    def __init__(self,sarray):
        self.sarray = sarray
-       self.sortedtimekeys = sarray.arraydict.keys()
+       self.sortedtimekeys = sorted(sarray.arraydict.keys())
 
    def __getitem__(self,item):
        return self.sarray.arraydict[item]
