@@ -1,0 +1,14 @@
+1. What I intuitively do is to see what the values are over a week, month, 3m, 6m, 1y. 5y is used only to make sure that the curves have indeed come back or in other words, there is some sort of (mean) reversion. 
+   So given that, if we have 1d,1m,3m,6m,1y values. We need to look at variation for each of these intervals. We can observe how variation varies. 
+
+2. Betting on day seems to risky. It probably does make sense to benefit from daiy trading but I think that the probability to have the prediction of daily values being correct would be smaller for a shorter period of time. If prediction is that p rises by dp in 1 day, then the probability of going down cannot be predicted so accurately because of the news etc. The prediction that we're doing would be on a curve basis and the smoothness of a curve seems lower for small intervals. Graphs are highly volatile for a day and in my experience trades don't even go through a lot of time if one wishes to benefit from short term movement i.e. selling and buying quickly - on small ups and downs. Of course paying commissions makes it even worse. Predictions for week, on the other hand, give the ability to predict a larger window of a value. 
+
+2. One factor indepdendent of daily/weekly predictions is the cooling off. Cooling off may always take a week or more. One thing that I have noticed is that a downward value may mean immediate loss (if stocks were shorted) but the correct prediction of a downward trend can actually offset the losses. Of course, one needs to have lot more money to be able to trade like this.
+
+3. Some general rules  : 
+   i) If a stock that went up is just volatile. Then it may be possible to benefit from the daily ups and downs: A stock that went up and down a lot in 3 day of the week would likely go up again if bought on the low tide. One must watch out for the bad news in the market though.
+   ii) sudden drops of good curves are always worth looking at (Toyota). Drops over a month need to be taken more seriously than a drops over a day.
+   iii) basic idea seems to be that a long-term rise followed by a sharp dip (a trench in uphill) should always be caught (Home Depot).
+   iv) Baxter's drop is a classic case where varitonal check could have caught the drop. Baxter won't go down immediately.
+
+4. There should be a way to evaulate a portfolio's market value at a certain time. This can be calculate only if price is available for all instruments at the particular time instant. Looking at historical data this wouldn't always be the case - so a tolerance can be specified. The binary search would return the closest match the evaluator can then just see if the closest time falls within the tolerance. No evaluation would be done.
