@@ -1,3 +1,6 @@
+#!/usr/bin/python
+
+
 import subprocess,sys,os,csv;
 import datetime,time,calendar;
 
@@ -131,22 +134,28 @@ TICKERFILE = "tickers.lst"
 
 #period_range();
 
-ticker_prices = loadDataFromFile(TICKERFILE)
+#ticker_prices = loadDataFromFile(TICKERFILE)
 #for t in ticker_prices.keys() : 
    #print ticker_prices[t].dump()
 
 (lows,highs) = readHistoricalPricesFile(TICKERFILE)
-#print lows['CSCO'].dump()
+csco_arr = lows['CSCO'] 
 
-print ticker_prices['CSCO'].dump()
+#csco_arr = SortedArray(0);
+#csco_arr.load("/tmp/CSCOFILE");
 
-# IT SHOULD be CHECKED BEFORE CALL to window_max IF TIME is KEY or NOT
+wop = window.WindowOperator(csco_arr)
+wd = window.WopDict()
+wd.wopdict['CSCO']=wop
 
 start_time  = calendar.timegm(datetime.datetime(2011,12,1,0,0,0,0,UTC()).timetuple())
 end_time = time.time()
 
-print "Max=",window.window_max(lows['CSCO'],[ start_time , end_time ] )
+#print "Max=",window.window_max(lows['CSCO'],[ start_time , end_time ] )
 
-p = portfolio.Portfolio()
+p = portfolio.Portfolio(86400)
 p.tickers['CSCO']=2
-p.evaluate(start_time,ticker_prices)
+
+print p.evaluate(start_time,wd)
+print wop.window_max([start_time,end_time])
+print wop.window_min([start_time,end_time])
