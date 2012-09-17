@@ -44,4 +44,15 @@ def isPotentialTrade(market_col,t,window,tolerance):
          return False;
 
 
+class Simula:
+   def __init__(self,portfolio,wd):
+      self.portfolio=portfolio
+      self.wd = wd
 
+   def isPotentialBuy(self,curtime,ticker):
+      ndays=4
+      ndaysback =  time - ndays * 86400
+      start_end = [ ndaysback, curtime ]
+      wop = self.wd[ticker]
+      ct = wop.closest_time(curtime)
+      return False;
