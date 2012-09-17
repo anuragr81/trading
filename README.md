@@ -1,4 +1,3 @@
-
 chanakyanIti
 
 8. vijnanena aatmaanam sampaadayet
@@ -6,3 +5,4 @@ chanakyanIti
 10. arthhasampat prakRtisampadam karoti
 11. prakRtikoShaH sarvakoShebhyoH gariiyaan
 14. avineetasvaamilaabhaat asvaamilaabhaH shreyaan
+  
