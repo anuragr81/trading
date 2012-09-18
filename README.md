@@ -13,3 +13,8 @@ chanakyanIti
 46. aavaapo manDalanivishtaH
 48. neetishaastranugo raajaa
 49. anantaraprakRtiH shatruH
+51. hetutaH shatrumitre bhavishyataH
+52. hIyamaanaH samdhim kurvati
+53. tejo he sandhaanahetuH tadarthhaanaam (the only reasons for sandhi is tej)
+54. taataptaloho lohen sandhiiyate
+55. na jyaayasaa samen ya (jyaayas - stronger)
