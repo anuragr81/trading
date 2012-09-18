@@ -12,3 +12,41 @@
    iv) Baxter's drop is a classic case where varitonal check could have caught the drop. Baxter won't go down immediately.
 
 4. There should be a way to evaulate a portfolio's market value at a certain time. This can be calculate only if price is available for all instruments at the particular time instant. Looking at historical data this wouldn't always be the case - so a tolerance can be specified. The binary search would return the closest match the evaluator can then just see if the closest time falls within the tolerance. No evaluation would be done.
+
+
+5. Here is how to receive TCP:
+   size_t read_start = 0;
+            while (true) { // reads forever
+
+                //ACE_Time_Value acets(0, 0);
+                int sz_read = (int)_socket.recv(buffer+read_start, MAX_READ_SIZE);
+
+                if (sz_read > 0) {
+
+                    if (sz_read + read_start > MAX_BUF_SIZE ) {
+                        printf("[::svc] Buffer not enough for the packet size \n");
+
+                        exit(1);
+                    }
+
+                    int nbytes_processed = process_data(buffer , read_start + sz_read );
+
+                    if (nbytes_processed>0) {
+                        memmove (buffer,buffer+nbytes_processed,sz_read + read_start- nbytes_processed);
+                    }
+
+                    read_start = sz_read + read_start  -nbytes_processed ;
+                }
+                else if (sz_read == -1)
+                {
+                    printf("[::svc] recv read=(%d) errno=(%d)\n", sz_read, errno);
+
+                    exit(-1);
+                }
+                else if (sz_read == 0)
+                {
+                    printf("[::svc] EOF - Remote Host closed socket\n");
+
+                    exit(1);
+                }
+            }
