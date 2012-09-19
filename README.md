@@ -16,7 +16,7 @@ chanakyanIti
 51. hetutaH shatrumitre bhavishyataH
 52. hIyamaanaH samdhim kurvati
 53. tejo he sandhaanahetuH tadarthhaanaam (the only reasons for sandhi is tej)
-54. taataptaloho lohen sandhiiyate
+54. taataptaloho lohen sandhiiyaet
 55. na jyaayasaa samen ya (jyaayas - stronger)
 59. ariprayatnamabhisamiikShet
 63. durbalaashrayo duHkhamaavahati
@@ -37,7 +37,17 @@ chanakyanIti
 100. asamaahitasya vRittiH na vidyate
 108. kaalaatikramaat kaal eva falam pibati
 112. niitijno deshakaalau pariikSheta
-
-
-
+118. duHsaadhyomapi susaadhyam karoti upaayajnaH
+119. ajnaaninaa kRitamapi na bahu mantavyam
+123. daaivam shaantikarmaNaa pratidveshaddhavyam
+125. kaaryavipattau doShaan varNayanti baalishaaH
+126. kaaryaarthhinaa daakShiNyam na kartavyam (???)
+127. kShiirarthho vatso maaturuudhaH pratihanti
+129. na daivapramaaNaanaam kaaryasiddhiH
+131. yaH kaaryaH na pashyati so andhaH
+142. aashritaiH api avamanyate mRidusvabhaavaH
+143. tiikShNadanDaH sarvaiH udvejanIyo bhavati
+145. alphasaaram shrutavantamapi na bahu manyati lokaH
+147. yaH samsadi paradoSham shansati sa svadoShabahutvam prakhyaapayati
+153. asamshayavinaashaat samshayvinaashaH shreyAn
 
