@@ -22,7 +22,9 @@ def bsearch( ll , start_end ,  x) :
 	       return mid;
 
 def binary_search(ll,x):
-  return bsearch(ll,[ 0 , len(ll)-1] , x)
+ ret = bsearch(ll,[ 0 , len(ll)-1] , x)
+ #print " returning index=", ret, " value=",ll[ret], " after searching for ",x
+ return ret
 
 # TODO: think of a way to verity that arraydict's keys are time -- for now 
 # only float check exists
