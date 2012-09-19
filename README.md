@@ -50,4 +50,10 @@ chanakyanIti
 145. alphasaaram shrutavantamapi na bahu manyati lokaH
 147. yaH samsadi paradoSham shansati sa svadoShabahutvam prakhyaapayati
 153. asamshayavinaashaat samshayvinaashaH shreyAn
+155. daanam dhamarH
+157. yo dharmaarthhau n vivardhayati sa kaamaH
+160. avamaanenaagatamaishvaryam avamanyate saadhuH
+167. baalaadapi arthhajaatam shRiNuyaat
+168. satyamapi ashraddheyam na vadet
+
 
