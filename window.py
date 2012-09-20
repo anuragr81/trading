@@ -53,14 +53,16 @@ class WindowOperator :
        i_wstart = binary_search (self.sortedtimekeys,start)      
        i_wend = binary_search(self.sortedtimekeys,end)
        # Pretty smart. eh?
-       return max(map(self.sarray.arraydict.get,self.sortedtimekeys[i_wstart:i_wend+1]))
+       retval = float(max(map(self.sarray.arraydict.get,self.sortedtimekeys[i_wstart:i_wend+1]))[0])
+       return float(retval[0])
 
    def window_min(self,start_end): 
        start = start_end[0]
        end   = start_end[1]
        i_wstart = binary_search (self.sortedtimekeys,start)      
        i_wend = binary_search(self.sortedtimekeys,end)
-       return min(map(self.sarray.arraydict.get,self.sortedtimekeys[i_wstart:i_wend+1]))
+       retval = min(map(self.sarray.arraydict.get,self.sortedtimekeys[i_wstart:i_wend+1]))
+       return float(retval[0])
 
 #ll = [ 1, 10,100 ]
 #pos = binary_search(ll,0)
