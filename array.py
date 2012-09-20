@@ -58,7 +58,10 @@ class SortedArray :
            for key in sorted(self.arraydict.keys()) : 
                 self.arraydict[key].append(col[i])
                 i = i + 1
-  
+                
+  def __getitem__(self,item):
+       return self.wopdict[item]
+
   def dump(self): 
       # sorted output
       ret=""
