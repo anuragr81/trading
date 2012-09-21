@@ -205,3 +205,59 @@ void backTraceDump(void)
 
 }
 
+
+6. Utility to get self IP :
+
+static int getInterfaceInfo(const char* interface, uint32_t& interfaceIP, char* interfaceIPStr)
+{
+    // NOTE: interfaceIP will be returned in NETWORK byte order
+
+    int rc = 0;
+    interfaceIP = INADDR_ANY;
+
+    if (interface != 0)
+    {
+        int fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
+
+        if (fd != -1)
+        {
+            struct ifreq ifr;
+            strncpy(ifr.ifr_name, interface, IFNAMSIZ);
+
+            if ((rc = ioctl(fd, SIOCGIFADDR, (caddr_t)&ifr, sizeof(ifr))) != -1)
+            {
+                struct sockaddr_in* sin = (struct sockaddr_in *)&ifr.ifr_addr;
+                interfaceIP = sin->sin_addr.s_addr;
+            }
+        }
+
+
+        if (fd == -1 || rc == -1)
+        {
+            ACE_DEBUG((MY_WARNING "[getInterfaceIPAddr] error finding interface IP address for '%s' (%s: %m);"
+                       " using INADDR_ANY\n", (interface == 0) ? "DEFAULT" : interface,
+                       (fd == -1) ? "socket" : "ioctl"));
+        }
+
+        close(fd); // ignore error
+    }
+
+
+    if (interfaceIPStr != 0)
+    {
+        struct in_addr ina;
+        ina.s_addr = interfaceIP;
+
+        strcpy(interfaceIPStr, inet_ntoa(ina));
+    }
+
+    return rc;
+}
+
+
+///// USAGE ///////////////
+    ACE_INET_Addr serverAddr;
+    if (serverAddr.set(port, ntohl(interfaceIP)) == -1)
+    {
+        return -1;
+    }
