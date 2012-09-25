@@ -336,3 +336,15 @@ class StringComparator{
    return lhs_shorter;
  }
 };
+
+
+9. Unlikely definitions: 
+
+#ifndef unlikely
+#ifdef __GCC__
+#define unlikely(x)   _  _builtin_expect (!!(x), 0)
+#else
+#define unlikely(x)  (x)
+#endif
+#endif
+
