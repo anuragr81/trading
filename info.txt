@@ -300,3 +300,39 @@ class HTTPHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             result = 'error'
         self.wfile.write(result)
 
+8. StringComparator
+
+class StringComparator{
+ public:
+ bool operator () (std::string const  & lhs , std::string const & rhs )
+ {
+    int shorter_length=0;
+    bool lhs_shorter;
+
+    if (lhs.size() < rhs.size() ){
+    shorter_length=lhs.size();
+    lhs_shorter = true;
+    }
+    else{
+    shorter_length=rhs.size();
+    lhs_shorter = false;
+    }
+
+    std::string::const_iterator lhs_ptr=lhs.begin();
+    std::string::const_iterator rhs_ptr=rhs.begin();
+
+    for (int i = 0 ; i < shorter_length ; i++,lhs_ptr++,rhs_ptr++){
+           if (*lhs_ptr >  *rhs_ptr)
+            {
+              return false;
+            }
+           else if (*lhs_ptr < *rhs_ptr )
+           {
+             return true;
+           }
+    }
+   // if control is here then one string is prefix of another
+   // the shorter string is lesser!
+   return lhs_shorter;
+ }
+};
