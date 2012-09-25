@@ -261,3 +261,42 @@ static int getInterfaceInfo(const char* interface, uint32_t& interfaceIP, char* 
     {
         return -1;
     }
+
+
+7. Github:
+class HTTPHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+    """Handling all HTTP Requests here."""
+    mb = None  # persisted data
+
+    def do_GET(self):
+        (sendReply,mimetype,path)=reply_type(self.path)
+        if sendReply :
+          resp=open("./"+path).read();
+          self.send_response(200)
+          self.send_header("Content-type",mimetype)
+          self.send_header("Content-length", len(resp))
+          self.end_headers()
+          self.wfile.write(resp)
+
+
+    def do_POST(self):
+        if self.mb == None : # do nothing if data is not initialized.
+            logger.error("Please initialized the Handler::mb")
+            return ;
+
+        length = int(self.headers.getheader('content-length'))
+        json_request_data = self.rfile.read(length)
+        logger.debug("Received Call from server: \""+str(json_request_data)+"\"")
+        try:
+            logger.debug("Parsed json:"+str(json.loads(json_request_data)))
+            result = handleRequest(json.loads(json_request_data),self.mb,self.client_address[0])
+            self.send_response(200)
+            self.send_header("Content-type","application/json")
+            self.send_header("Content-length", len(result))
+            self.end_headers()
+
+        except:
+            traceback.print_exc(file=sys.stdout)
+            result = 'error'
+        self.wfile.write(result)
+
