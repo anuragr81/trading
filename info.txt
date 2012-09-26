@@ -348,3 +348,230 @@ class StringComparator{
 #endif
 #endif
 
+
+
+10. Simple server : 
+#ifndef __GUI_REQUEST_MANAGER_HPP__
+#define __GUI_REQUEST_MANAGER_HPP__
+
+#include <iostream>
+#include <map>
+
+#include <boost/lexical_cast.hpp>
+
+#include "GUIRequestXMLParser.hpp"
+#include "GUIResponse.hpp"
+
+using namespace std;
+
+const int HEADER_SIZE = 10;
+const int RECV_TIMEOUT = 3;
+const int READBUF_SIZE = 20000;
+
+class Client {
+
+public:
+   ACE_SOCK_Stream peer;
+	ACE_INET_Addr remote;
+
+	Client(const ACE_SOCK_Stream& p) :
+		peer(p) {
+		peer.get_remote_addr(remote);
+	}
+
+	~Client() {
+		peer.close();
+	}
+
+};
+
+class GUIRequestManager {
+
+public:
+	GUIRequestManager(ACE_INET_Addr const & address) {
+		cout << "opening acceptor " << endl;
+		if (_acceptor.open(address, 1) != 0) {
+			cout << "Error in opening address." << endl;
+		} else {
+			cout << "opened acceptor " << endl;
+			_masterHandleSet.set_bit(_acceptor.get_handle());
+			_acceptor.enable(ACE_NONBLOCK);
+		}
+	}
+
+	int serve_forever() {
+		while (1) {
+			_activeReadHandleSet = _masterHandleSet;
+			int width = (int) _activeReadHandleSet.max_set() + 1;
+			if (ACE::select(width, _activeReadHandleSet) == -1) {
+				cout << "Connection could not be handled." << endl;
+				continue;
+			}
+			int rh = handleConnections();
+
+			if (rh == -1) {
+				cout << "Error while handling connections." << endl;
+			}
+
+			int rd = handleData();
+			if (rd == -1) {
+				cout << "Error while handling data." << endl;
+			}
+		}
+		return 0;
+	}
+
+private:
+
+	int handleConnections() {
+		ACE_SOCK_Stream peer;
+
+		// wait for connection
+
+		if (_activeReadHandleSet.is_set(_acceptor.get_handle())) {
+			while (_acceptor.accept(peer) != -1) {
+				// create a client
+				// peer.get_handle() Handle peer
+				cout << "Creating a client" << endl;
+				_clients[peer.get_handle()] = new Client(peer);
+
+				// add the new handle to the map and to the set of handles
+				// we <select> for input
+
+				_masterHandleSet.set_bit(peer.get_handle());
+			}
+
+			// acknowledge
+			_activeReadHandleSet.clr_bit(_acceptor.get_handle());
+		}
+
+		// success
+		return 0;
+	}
+
+	void prepareResponse(GUI::Request const & request,
+			GUI::Response * pResponse) const {
+		pResponse->setFeedMap(request.getFeedMap());
+	}
+
+	void handleRequestData(char * buf, size_t message_size,
+			GUI::Response * pResp) const {
+		//ACE_DEBUG (( MY_DEBUG, "(%P|%t) Handling Data [ %s ] ", std::string(buf,message_size).c_str()));
+		cout << " Handling data : " << std::string(buf, message_size) << endl;
+		try {
+
+			GUI::Request request = GUI::XMLRequestParser::parse(buf);
+			prepareResponse(request, pResp);
+
+			ACE_DEBUG((MY_DEBUG, "(%P|%t)  Request = %d", request.type()));
+		} catch (std::exception & e) {
+			ACE_ERROR((MY_ERROR, "(%P|%t)  Error [%s]", e.what()));
+			cout << " Error while parsing : " << e.what() << endl;
+		} catch (...) {
+			ACE_ERROR((MY_ERROR, "(%P|%t)  Non-standard Execption."));
+			cout << " Error while parsing : " << endl;
+		}
+	}
+
+	int serveGUIRequest(Client * clientPtr) {
+
+		cout << " Serving GUIRequest " << endl;
+		ACE_Time_Value timeout(RECV_TIMEOUT, 0);
+		char buf[READBUF_SIZE];
+		int bytesRead = clientPtr->peer.recv_n(buf, HEADER_SIZE, &timeout);
+
+		if (bytesRead != HEADER_SIZE) {
+			if (bytesRead == 0) {
+				cout << "Connection closed" << endl;
+			}
+			if (bytesRead == -1) {
+				cout << "Error in communication" << endl;
+			}
+			return -1;
+		}
+
+		try {
+			int szMessage = boost::lexical_cast<int>(
+					std::string(buf, HEADER_SIZE));
+			cout << " Message of size " << szMessage << " received" << endl;
+			int bytesRead = (int) clientPtr->peer.recv_n(buf, szMessage,
+					&timeout);
+
+			if (bytesRead != szMessage) {
+				if (bytesRead == 0) {
+					cout << "Connection closed" << endl;
+				}
+				if (bytesRead == -1) {
+					cout << "Error in communication" << endl;
+				}
+				return -1;
+			}
+			cout << " Message : " << std::string(buf, szMessage) << endl;
+
+			GUI::Response response;
+
+			handleRequestData(buf, szMessage, &response);
+
+			int szResponse = (int) response.xmldump(buf, READBUF_SIZE);
+			if (clientPtr->peer.send_n(&buf, szResponse, &timeout)
+					!= szResponse) {
+				cout << "Could not send data to requester" << endl;
+				return -1;
+			} else {
+				cout << "Sent data \"" << std::string(buf, szResponse) << "\""
+						<< endl;
+			}
+
+		} catch (boost::bad_lexical_cast & e) {
+			cout << " Could not parse size " << endl;
+			return -1;
+		}
+
+		return 0;
+	}
+
+	int handleData() {
+		// iterate over all the socket having pending data
+		ACE_Handle_Set_Iterator peer_iterator(_activeReadHandleSet);
+
+		ACE_HANDLE handle;
+
+		while ((handle = peer_iterator()) != ACE_INVALID_HANDLE) {
+			// find our client for this handle
+			std::map<ACE_HANDLE, Client*>::iterator clientIterator =
+					_clients.find(handle);
+
+			if (clientIterator == _clients.end()) {
+				continue;
+			}
+
+			Client* clientPtr = (*clientIterator).second;
+
+			if (serveGUIRequest(clientPtr) == -1) {
+				_masterHandleSet.clr_bit(handle);
+
+				cout << "delete client " << clientPtr->remote.get_host_addr()
+						<< ":" << clientPtr->remote.get_port_number() << endl;
+
+				_clients.erase(clientIterator);
+
+				delete clientPtr;
+			}
+		}
+
+		// client has shutdown the connection
+		return 0;
+	}
+
+private:
+	ACE_SOCK_Acceptor _acceptor;
+	ACE_Handle_Set _masterHandleSet;
+	ACE_Handle_Set _activeReadHandleSet;
+
+	std::map<ACE_HANDLE, Client*> _clients;
+
+};
+
+#endif
+
+
