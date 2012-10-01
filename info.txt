@@ -575,3 +575,70 @@ private:
 #endif
 
 
+10. Adding Locks, Conditions:
+
+class FeedMap :
+
+  def __init__(self,host,port):
+     self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+     self.host_port=  ( host , port )
+     self.sock.connect(self.host_port)
+     self.feed_dict=dict()
+     self.lock=threading.RLock()
+     self.cond=threading.Condition(self.lock)
+
+
+  def send_data(self,data_):
+        header = str(len(data_)+1).rjust(HEADER_SIZE,'0')
+        data_to_send = header + data_ + struct.pack('!b',1)
+        logger.debug("Sending Packet (sz="+str(len(data_to_send))+"):\n"+dump(data_to_send))
+        self.sock.sendall(data_to_send)
+        return self.sock.recv(MAX_READ_SIZE)
+
+     #except socket.error, e:
+     #except IOError, e:
+     #if e.errno == errno.EPIPE:
+
+
+
+  def update(self,list_feeds,user) :
+     new_candidate_dict=list2feed_dict(list_feeds);
+
+     self.lock.acquire()
+     self.cond.acquire();
+     # check should be inside Critical Section
+     if (new_candidate_dict==self.feed_dict) :
+         logger.info("No Update necessary.");
+     else:
+        try :
+           data = prepareMBServerRequest(new_candidate_dict);
+           # send data to Megabook Server
+           response = self.send_data(data)
+           logger.debug("Received Response from MB:" + response );
+           (response_type,parsed_feed_dict ) = parseResponse(response);
+           if int(response_type) == VALID_RESPONSE_TYPE :
+              self.feed_dict=parsed_feed_dict
+              logger.info("FeedMap Changed.");
+        except :
+           traceback.print_exc(file=sys.stdout)
+           logger.error("Could not retrieve status from Megabook.");
+
+        self.cond.notifyAll(); # wake up the blocking asyncs
+
+     self.user = user
+
+     self.cond.release();
+     self.lock.release()
+
+  def getdata(self):
+     self.lock.acquire();
+     user =""
+     feeds=[]
+     for key in self.feed_dict.keys():
+         feeds.append((self.feed_dict[key])); # returning a copy
+     user=self.user
+     self.lock.release();
+     return [feeds,user];
+
+
+
