@@ -640,5 +640,76 @@ class FeedMap :
      self.lock.release();
      return [feeds,user];
 
+11. Simple javascript Code for async data: 
+
+<script type="text/javascript">
+                function sync_xml_http_post(url, data) {
+                        var req = false;
+                        try {
+                                // Firefox, Opera 8.0+, Safari
+                                req = new XMLHttpRequest();
+                        } catch (e) {
+                                // Internet Explorer
+                                try {
+                                        req = new ActiveXObject("Msxml2.XMLHTTP");
+                                } catch (e) {
+                                        try {
+                                                req = new ActiveXObject("Microsoft.XMLHTTP");
+                                        } catch (e) {
+                                                alert("Your browser does not support AJAX!");
+                                                return "";
+                                        }
+                                }
+                        }
+
+                        try {
+                                req.open("POST", url, false /*true: asynchronous*/);
+                                req.send(data);
+                        } catch (e) {
+                                alert("Exception in receiving data from Server:" + e);
+                                return "";
+                        }
+
+                        return req.responseText;
+                }
+
+                function async_xml_http_post(url, data, callback) {
+                        var req = false;
+                        try {
+                                // Firefox, Opera 8.0+, Safari
+                                req = new XMLHttpRequest();
+                        } catch (e) {
+                                // Internet Explorer
+                                try {
+                                        req = new ActiveXObject("Msxml2.XMLHTTP");
+                                } catch (e) {
+                                        try {
+                                                req = new ActiveXObject("Microsoft.XMLHTTP");
+                                        } catch (e) {
+                                                alert("Your browser does not support AJAX!");
+                                                return "";
+                                        }
+                                }
+                        }
+
+                        req.open("POST", url, true /* false: synchronous */);
+                        req.onreadystatechange = function() {
+                                if(req.readyState == 4) {
+                                        callback(req);
+                                }
+                        }
+                        req.send(data);
+                }
+
+                function localTimeFromSeconds(totalSec) {
+                        hours = parseInt(totalSec / 3600) % 24;
+                        minutes = parseInt(totalSec / 60) % 60;
+                        seconds = ~~(totalSec % 60);
+                        return (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
+                }
+
+                function async_call(request, callback) {
+                        async_xml_http_post("index.html", request, callback);
+                }
 
 
