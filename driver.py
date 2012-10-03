@@ -90,7 +90,7 @@ def getHighsFromHistFile(histfile):
     for row in wr : 
        if count > 0 :  # skipping first entry
          cur_time = calendar.timegm(time.strptime(row[0],"%Y-%m-%d"))
-         outArr.addRow([cur_time, row[2]]);  
+         outArr.addRow([cur_time, row[3]]);  
        else : 
          count = count + 1
     return outArr
@@ -104,7 +104,7 @@ def getLowsFromHistFile(histfile):
     for row in wr : 
        if count > 0 : 
           cur_time = calendar.timegm(time.strptime(row[0],"%Y-%m-%d"))
-          outArr.addRow([cur_time, row[3]]);
+          outArr.addRow([cur_time, row[4]]);
        else : 
           count = count + 1
     return outArr
@@ -139,6 +139,36 @@ TICKERFILE = "tickers.lst"
    #print ticker_prices[t].dump()
 
 (lows,highs) = readHistoricalPricesFile(TICKERFILE)
+
+''' 
+ Add latest prices in the historical data 
+ 
+ TODO: Merging adding a new price in lows
+       and highs doesn't disrupt data 
+       as long as one is looking for max in 
+       highs and max in lows.
+'''
+
+class MergeOverWriteException(Exception):
+   pass
+
+recent_prices = reloadWebData(TICKERFILE)
+
+print "Reloaded current data."
+
+for i in open(TICKERFILE).readlines(): 
+  ticker = i.strip()
+  for key in recent_prices[ticker].arraydict.keys(): 
+     if key in lows[ticker].arraydict.keys() : 
+        raise MergeOverWriteException()
+     else : 
+        lows[ticker].arraydict[key] = recent_prices[ticker][key]
+
+     if key in highs[ticker].arraydict.keys() : 
+        raise MergeOverWriteException()
+     else : 
+        highs[ticker].arraydict[key] = recent_prices[ticker][key]
+
 
 
 start_date = datetime.datetime(2012,9,7,0,0,0,0,UTC())
