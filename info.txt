@@ -300,6 +300,39 @@ class HTTPHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             result = 'error'
         self.wfile.write(result)
 
+
+def reply_type(path) :
+   #Check the file extension required and
+   #set the right mime type
+   if path == "/":
+     retpath = FILE
+   else :
+     retpath = path
+
+   logger.debug("path = " +retpath)
+
+   sendReply = False
+   mimetype = None
+
+   if retpath.endswith(".html"):
+    mimetype='text/html'
+    sendReply = True
+   if retpath.endswith(".jpg"):
+    mimetype='image/jpg'
+    sendReply = True
+   if retpath.endswith(".gif"):
+    mimetype='image/gif'
+    sendReply = True
+   if retpath.endswith(".js"):
+    mimetype='application/javascript'
+    sendReply = True
+   if retpath.endswith(".css"):
+    mimetype='text/css'
+    sendReply = True
+
+   return [sendReply,mimetype,retpath]
+
+
 8. StringComparator
 
 class StringComparator{
