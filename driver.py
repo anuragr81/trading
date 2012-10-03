@@ -143,7 +143,7 @@ TICKERFILE = "tickers.lst"
 ''' 
  Add latest prices in the historical data 
  
- TODO: Merging adding a new price in lows
+ TODO: Merging/adding a new price in lows
        and highs doesn't disrupt data 
        as long as one is looking for max in 
        highs and max in lows.
