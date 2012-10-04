@@ -746,3 +746,21 @@ class FeedMap :
                 }
 
 
+12. URL based authentication 
+
+function getURLParameter(name) {
+    return decodeURI(
+        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+    );
+}
+
+
+if ( getURLParameter("sid") == "null") {
+  alert("Session to be initialized.");
+  window.location = window.location +  "?sid=420";
+} else {
+  Y.log("Using Session: "+getURLParameter("sid"));
+}
+
+
+
