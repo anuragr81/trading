@@ -37,6 +37,7 @@ chanakyanIti
 100. asamaahitasya vRittiH na vidyate
 108. kaalaatikramaat kaal eva falam pibati
 112. niitijno deshakaalau pariikSheta
+116. jnaanaamanumaanaishcha pariikShaa kartavyaa
 118. duHsaadhyomapi susaadhyam karoti upaayajnaH
 119. ajnaaninaa kRitamapi na bahu mantavyam
 123. daaivam shaantikarmaNaa pratidveshaddhavyam
@@ -55,6 +56,26 @@ chanakyanIti
 160. avamaanenaagatamaishvaryam avamanyate saadhuH
 167. baalaadapi arthhajaatam shRiNuyaat
 168. satyamapi ashraddheyam na vadet
+169. na alpadShaat bahuguNaa tyajyante
+171. naasti ratnam akhanDitam
+173. apriye kRtam priyamapi dveshyam bhavati
+174. namanti api tulaakotiH kUpodakakShayam karoti
+177. kShIraashritam jalam kShIrameva bhavati
+179. rajatam kanakasaMgaat kanakam bhavati
+181. na paapakarmaNaam aakroshabhayam
+182. utsaahavataam shatravo api vashii bhavanti
+185. nirutsaahaat daivam patati
+190. arthha siddhau vairiNam na vishvaset
+191. arthhaadiin eva niyatasambandhaH
+192. shatrorapi sutaH sakhaa rakShitavya
+194. shatrum chhidre pariharet
+195. aatmachhidram na prakaashyet
+200. ekaangadoShaH puruShamavasaadati
+201. shatrum jayati suvRittataa
+205. supUjito api durjanaH piidayatyeva
+206. chandanaadiinapi daavogniH dahatyeva
+209. bhartraadhikam rahasyuktam vaktumichchanti abuddhayaH
+210. anuraagaH tu phalen suuchyate
 
 
 
