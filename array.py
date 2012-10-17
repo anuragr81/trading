@@ -25,11 +25,11 @@ class ArrayManip:
      return self.array[self.i][self.j]
 
 
-
 # # SortedArray stores an unsorted dict with it's key
 #   being the sortcol passed during the creation. The sortco
 #   must be float.
 # # The sortcol is always the key and is excluded from the value
+
 class SortedArray : 
   def __init__(self,sortcol): 
      self.arraydict = dict()
@@ -60,7 +60,7 @@ class SortedArray :
                 i = i + 1
                 
   def __getitem__(self,item):
-       return self.wopdict[item]
+       return self.arraydict[item]
 
   def dump(self): 
       # sorted output
@@ -85,8 +85,6 @@ class SortedArray :
       self.arraydict={}
       for row in wr: 
          self.arraydict[float(row[0])]=row[1:]
-
-
 
 class Array : 
   def __init__(self):

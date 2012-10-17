@@ -124,7 +124,6 @@ def readHistoricalPricesFile(tickerfile) :
      return [ highs, lows ] 
 
 TICKERFILE = "tickers.lst"
-#ticker_prices = reloadWebData(TICKERFILE)
 
 #
 # 1. Criteria of alert is only a "sudden-down" in prices. For now it means lowering of the 3-month range.
@@ -140,10 +139,11 @@ TICKERFILE = "tickers.lst"
 
 (lows,highs) = readHistoricalPricesFile(TICKERFILE)
 
+
 ''' 
  Add latest prices in the historical data 
  
- TODO: Merging/adding a new price in lows
+ TODO: Merging adding a new price in lows
        and highs doesn't disrupt data 
        as long as one is looking for max in 
        highs and max in lows.
@@ -171,45 +171,43 @@ for i in open(TICKERFILE).readlines():
 
 
 
-start_date = datetime.datetime(2012,9,7,0,0,0,0,UTC())
-end_date   = datetime.datetime(2012,9,18,0,0,0,0,UTC())
-
+start_date = datetime.datetime(2012,10,16,0,0,0,0,UTC())
+end_date   = datetime.datetime(2012,10,17,0,0,0,0,UTC())
 
 for i in open(TICKERFILE).readlines() :
-
   ticker = i.strip()
+  lows[ticker].save("/tmp/"+ticker+"_lows.data");
+  highs[ticker].save("/tmp/"+ticker+"_highs.data");
+
   print "=========TICKER=",ticker,"============="
-  ranges=SortedArray(0)
-  mins  =SortedArray(0)
+  ranges = SortedArray(0)
+  mins   = SortedArray(0)
   for cur_days in range(0,2) :
      #print "cur_days=",cur_days
      cur_start_time =  calendar.timegm((start_date-datetime.timedelta(days=cur_days)).timetuple())
      cur_end_time   =  calendar.timegm((end_date-datetime.timedelta(days=cur_days)).timetuple())
-     logger.debug("cur_start_time="+str(time.gmtime(cur_start_time))+" cur_end_time="+str(time.gmtime(cur_end_time)))
-
-     wop = window.WindowOperator(lows[ticker])
-     wmin = wop.window_min([cur_start_time,cur_end_time])
-     wmax = wop.window_max([cur_start_time,cur_end_time])
-     ranges.addRow([cur_end_time, wmax - wmin])
-     mins.addRow([cur_end_time, wmin])
+     #print "cur_start_time="+str(time.gmtime(cur_start_time))+" cur_end_time="+str(time.gmtime(cur_end_time))
+     wop_min = window.WindowOperator(lows[ticker])
+     wop_max = window.WindowOperator(highs[ticker])
+     cur_price =  ( float(wop_min[wop_min.closest_time(cur_end_time)][0]) + float(wop_max[wop_max.closest_time(cur_end_time)][0]) ) / 2
+     wmin = wop_min.window_min([cur_start_time,cur_end_time])
+     wmax = wop_max.window_max([cur_start_time,cur_end_time])
+     #print "Wmin(",cur_start_time,")=",wmin
+     #print "Wmax(",cur_end_time,")=",wmax
+     ranges.addRow([cur_end_time, (wmax - wmin)/cur_price])
+     mins.addRow([cur_end_time, wmin/cur_price])
 
   skeys = sorted(ranges.arraydict.keys())
   d=1
   for i in range(len(skeys)-d) :
       range_diff = ranges[skeys[d-i]][0] - ranges[skeys[d-i-1]][0]
       min_diff   = mins[skeys[d-i]][0] - mins[skeys[d-i-1]][0]
-      if range_diff > .1 and min_diff < -.1 :
-        print "range_diff=", range_diff," min_diff = ",min_diff
-
+      #if range_diff > .1 and min_diff < -.1 :
+      print "range_diff/cur_price=", range_diff," min_diff/cur_price = ",min_diff
 
 sys.exit(1)
 
-
-
 csco_arr = lows['CSCO'] 
-
-#csco_arr = SortedArray(0);
-#csco_arr.load("/tmp/CSCOFILE");
 
 wop = window.WindowOperator(csco_arr)
 wd = window.WopDict()
