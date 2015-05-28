@@ -4,11 +4,11 @@
 loader <- function (filename) {
    dat=read.csv(filename);
    dat$Date = strptime(dat$Date,"%Y-%m-%d");
-   # ensure that the time series is sorted correctly 
+   # ensure that the time series is sorted correctly
    # past values are on top
    if ( head(dat$Date,1) - tail(dat$Date,1) > 0 ) {
-     # reverse the roworder 
-     dat = dat[rev(rownames(dat)),];
+     # reverse the roworder
+     dat = dat[rev(rownames(dat)),]
    }
    return (dat);
 }
@@ -28,9 +28,19 @@ returnVec <- function(dat){
    return (tail(dat,1)/head(dat,1)-1);
 }
 
+myrollapply <- function (dat,width,func){
+   col = "Close";
+   rowlen = dim(dat)[1];
+   if( rowlen < width ) {
+      stop('dim(dat)[1] < width');
+   }
+   for ( i in seq(1,rowlen-width+1)) {
+       print (returnVec(dat[i:(i+width-1),col]));
+   }
+}
 # simple and fast returns plot (for 10x5 blocks) would be:
 # dat5 = dataNdaySpaced(loader("data/NAME.csv"),5);
 # width = 10
 # rollapply(dat5,width,returnVec)
 # plot(dat5[1:(dim(dat5)[1]-width+1),]$Date,rets)
-# 
+#
