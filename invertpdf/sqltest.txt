@@ -29,5 +29,5 @@ create table orders (
 
 select product.name, orders.product_id,sum(quantity) from
 orders right outer join product on product.product_id = orders.product_id
-where product.available_from < curdate()
+where product.available_from < datesub(curdate(),interval 1 month) and orders.dispatch_date > datesub(curdate(),interval 1 year)
 group by product.product_id having sum(orders.quantity)<10 or count(orders.quantity)=0
