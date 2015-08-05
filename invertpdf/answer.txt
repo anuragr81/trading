@@ -1,4 +1,8 @@
 
+1. 
+
+#######################################################################################
+
 #!/usr/bin/python
 
 '''
@@ -83,7 +87,9 @@ class RandomGenUnitTests(unittest.TestCase):
 if __name__ == '__main__':
     unittest.main()
 
+#######################################################################################
 
+2.
 
 
 select product.name, orders.product_id,sum(quantity) from
