@@ -31,6 +31,6 @@ returnVec <- function(dat){
 # simple and fast returns plot (for 10x5 blocks) would be:
 # dat5 = dataNdaySpaced(loader("data/NAME.csv"),5);
 # width = 10
-# rollapply(dat5,width,returnVec)
+# rets = rollapply(dat5$Close,width,returnVec)
 # plot(dat5[1:(dim(dat5)[1]-width+1),]$Date,rets)
 # 
