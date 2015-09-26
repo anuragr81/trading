@@ -50,6 +50,7 @@ myrollapply <- function (dat,width,func){
    write.csv(output_df,"/tmp/output.df.csv");
    return(output_df);
 }
+
 # simple and fast returns plot (for 10x5 blocks) would be:
 # dat5 = dataNdaySpaced(loader("data/NAME.csv"),5);
 # width = 10

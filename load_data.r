@@ -1,4 +1,5 @@
 
+source ("
 #dat=read.csv('data/YHOO.html');
 dat=read.csv(commandArgs(TRUE)[1]);
 start_date=strptime(commandArgs(TRUE)[2],"%Y-%m-%d");
