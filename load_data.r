@@ -23,7 +23,6 @@ if (!is.na(start_date) && !is.na(end_date) ){
  par(mfrow=c(2,1))
  plot(dat$date,dat$Open,'l');
  plot(dat$dat,c(0,diff(dat$Open)),type='l')
- 
 
  #hist(c(0,diff(dat$Open)))
  # how low is low is the question.
