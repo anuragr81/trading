@@ -3,28 +3,48 @@ is.POSIXlt <- function(x) inherits(x, "POSIXlt")
 
 # @desc          - returns signal using ALL data provided
 # @preconditions - assumes date_vector and price_vector are of same length
-get_signal_at_last_point <- function(date_vector,price_vector,position) {
-  n <- length(price_vector);
-  if (n>10) {
-    print(paste("moving average=",mean(price_vector[n-5:n])));
-    print(paste("last_price=",price_vector[n]));
-    dat<-data.frame(date=date_vector,price=price_vector);
-    if (price_vector[n]<mean(price_vector[n-5:n])) { # if price hits below mean-average then buy
-       print(paste("Buying on ",date_vector[n]," at ",price_vector[n]));
-    }
-    if(n==20){
-    print(dat);
-    plot(dat$date,dat$price);
-    stop("Done");
-    }
+get_signal_at_last_point <- function(date_vector,price_vector,tol) {
+  window_size <- 10
+  ma_size <- 5
+  if(ma_size>window_size){
+    stop("must have ma_size <= window_size")
   }
-  
-  return(list(signal_value=length(date_vector),position=position));
+  n <- length(price_vector);
+  if (n>window_size) {
+    
+    print(paste("moving average=",mean(price_vector[n-ma_size:n])));
+    print(paste("last_price=",price_vector[n]));
+    
+    # temporary stop condition <start>
+    #if(n==20){
+    #  dat<-data.frame(date=date_vector,price=price_vector);
+    #  print(dat);
+    #  plot(dat$date,dat$price);
+    #  stop("Done");
+    #}
+    
+    # temporary stop condition <end>
+    
+    # if condition is met (if price hits below mean-average then buy)
+    if (price_vector[n]<mean(price_vector[(n-ma_size):n]-tol)) {
+      print(paste("Buying on ",date_vector[n]," at ",price_vector[n]));
+      return(1);
+    } else if (price_vector[n]>mean(price_vector[(n-ma_size):n]+tol)){
+      # we mean to sell if the price higher than the mean
+      print(paste("Selling on ",date_vector[n]," at ",price_vector[n]));
+      return(-1);
+    } else{
+      return (0)
+    }
+    
+  }
+  return(0);
 }
 
+#if ( numToBuy(price=price_vector[n],position=position,poisition_limit=position_limit)
 # @desc - returns signal for all input vectors
 get_signal_vector <- function(date_vector,price_vector) {
-
+  
   if (!is.numeric(price_vector)) {
     stop("price_vector must be numeric");
   }
@@ -36,14 +56,11 @@ get_signal_vector <- function(date_vector,price_vector) {
   }
   signals = array();
   position <- 0
+  position_limit <- 1000
+  tol <- 10
   for ( i in seq(length(date_vector))) {
     # use different functions for different signal calculation criteria
-    signal_status = get_signal_at_last_point(date_vector[1:i],price_vector[1:i],position);
-    signals[i]=signal_status$signal_value
-    position <- signal_status$position;
-    print(paste("position=",position))
-    
+    signals[i] = get_signal_at_last_point(date_vector=date_vector[1:i],price_vector=price_vector[1:i],tol=tol);    
   }
-  print(signals);
-
+  
 }
