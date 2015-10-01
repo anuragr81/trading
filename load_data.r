@@ -21,7 +21,7 @@ if (!is.na(start_date) && !is.na(end_date) ){
  #get signal vector
  signals = get_signal_vector(date_vector=dat$date,price_vector=dat$Close)
  #get projected PNL
- get_pnl_vector(date_vector=dat$date,price_vector=dat$Close,signals=signals,start_position=5000,position_limit=5000);
+ get_pnl_vector(date_vector=dat$date,price_vector=dat$Close,signals=signals,start_position=0,position_limit=10000);
  
  par(mfrow=c(2,1))
  plot(dat$date,dat$Open,'l');

@@ -25,10 +25,10 @@ get_signal_at_last_point <- function(date_vector,price_vector,tol) {
     # temporary stop condition <end>
     
     # if condition is met (if price hits below mean-average then buy)
-    if (price_vector[n]<mean(price_vector[(n-ma_size):n]-tol)) {
+    if (price_vector[n]<mean(price_vector[(n-ma_size):n]*(1-tol) )) {
       print(paste("Buying on ",date_vector[n]," at ",price_vector[n]));
       return(1);
-    } else if (price_vector[n]>mean(price_vector[(n-ma_size):n]+tol)){
+    } else if (price_vector[n]>mean(price_vector[(n-ma_size):n]*(1+tol) )){
       # we mean to sell if the price higher than the mean
       print(paste("Selling on ",date_vector[n]," at ",price_vector[n]));
       return(-1);
@@ -54,9 +54,7 @@ get_signal_vector <- function(date_vector,price_vector) {
     stop("date_vector and price_vector must be of the same size");
   }
   signals = array();
-  position <- 0
-  position_limit <- 1000
-  tol <- 10
+  tol <- .005
   for ( i in seq(length(date_vector))) {
     # use different functions for different signal calculation criteria
     signals[i] = get_signal_at_last_point(date_vector=date_vector[1:i],price_vector=price_vector[1:i],tol=tol);    
