@@ -1,6 +1,5 @@
 
-is.POSIXlt <- function(x) inherits(x, "POSIXlt")
-
+source('utils.r');
 # @desc          - returns signal using ALL data provided
 # @preconditions - assumes date_vector and price_vector are of same length
 get_signal_at_last_point <- function(date_vector,price_vector,tol) {
@@ -62,5 +61,7 @@ get_signal_vector <- function(date_vector,price_vector) {
     # use different functions for different signal calculation criteria
     signals[i] = get_signal_at_last_point(date_vector=date_vector[1:i],price_vector=price_vector[1:i],tol=tol);    
   }
+  
+  return(signals);
   
 }

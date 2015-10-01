@@ -1,6 +1,7 @@
 
 source ("loader.r");
 source ("signal_vector.r");
+source ("pnl_vector.r");
 #dat=read.csv('data/YHOO.html');
 dat=read.csv(commandArgs(TRUE)[1]);
 start_date=strptime(commandArgs(TRUE)[2],"%Y-%m-%d");
@@ -20,6 +21,8 @@ if (!is.na(start_date) && !is.na(end_date) ){
  #get signal vector
  signals = get_signal_vector(date_vector=dat$date,price_vector=dat$Close)
  #get projected PNL
+ get_pnl_vector(date_vector=dat$date,price_vector=dat$Close,signals=signals,start_position=5000,position_limit=position_limit);
+ 
  par(mfrow=c(2,1))
  plot(dat$date,dat$Open,'l');
  plot(dat$dat,c(0,diff(dat$Open)),type='l')
