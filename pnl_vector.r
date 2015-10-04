@@ -48,6 +48,7 @@ updateStash <- function (stash,cost,num_stocks)
 }
 get_pnl_vector <- function(date_vector,price_vector,signals,start_position,position_limit){
   
+  
   if (!is.numeric(price_vector)) {
     stop("price_vector must be numeric");
   }
@@ -65,11 +66,14 @@ get_pnl_vector <- function(date_vector,price_vector,signals,start_position,posit
   cost_limit = position_limit ; # interprets position_limit as cost_limit
   num_stocks = 0;
   stash=0;
+  profit=array();
   for (i in seq(length(date_vector))){
     signal <- signals[i];
     stash_update = updateStash(stash=stash,cost=cost,num_stocks=num_stocks);
     stash = stash_update$stash;
     cost = stash_update$cost;
+    profit[i]=stash;
+    
     if (signal == 1){
       # buy
       n = num_to_buy(cost=cost,cost_limit=cost_limit,price=price_vector[i]);
@@ -95,7 +99,7 @@ get_pnl_vector <- function(date_vector,price_vector,signals,start_position,posit
     }
   }
   
-  return(0);
+  return(profit);
 }
 
 

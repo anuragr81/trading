@@ -3,7 +3,7 @@ source('utils.r');
 # @desc          - returns signal using ALL data provided
 # @preconditions - assumes date_vector and price_vector are of same length
 get_signal_at_last_point <- function(date_vector,price_vector,tol) {
-  window_size <- 10
+  window_size <- 5
   ma_size <- 5
   if(ma_size>window_size){
     stop("must have ma_size <= window_size")

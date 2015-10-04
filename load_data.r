@@ -21,12 +21,12 @@ if (!is.na(start_date) && !is.na(end_date) ){
  #get signal vector
  signals = get_signal_vector(date_vector=dat$date,price_vector=dat$Close)
  #get projected PNL
- get_pnl_vector(date_vector=dat$date,price_vector=dat$Close,signals=signals,start_position=0,position_limit=10000);
- 
- par(mfrow=c(2,1))
+ profit=get_pnl_vector(date_vector=dat$date,price_vector=dat$Close,signals=signals,start_position=0,position_limit=10000);
+ print(paste("profit=",profit));
+ par(mfrow=c(3,1))
  plot(dat$date,dat$Open,'l');
- plot(dat$dat,c(0,diff(dat$Open)),type='l')
-
+ plot(dat$date,c(0,diff(dat$Open)),type='l')
+ plot(dat$date,profit);
  #hist(c(0,diff(dat$Open)))
  # how low is low is the question.
  # separation from monthly moving average is what we're looking at (however we're betting only on the moving average then)
