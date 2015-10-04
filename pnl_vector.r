@@ -1,6 +1,7 @@
-num_to_buy <- function(position,position_limit,price){
-  num = (position_limit - position)/price;
-  print(paste("position_limit=",position_limit," position=",position," num=",num));
+
+num_to_buy <- function(cost,cost_limit,price){
+  num = (cost_limit - cost)/price;
+  print(paste("cost_limit=",cost_limit," cost=",cost," num=",num));
   if (num>0){
     if (num>=1){
       return(floor(num));
@@ -8,20 +9,22 @@ num_to_buy <- function(position,position_limit,price){
       return(0);
     }
   } else {
-    stop("Already hit (buy) position_limit");
+    stop("Already hit (buy) cost_limit");
   }
 }
 
-# @desc - cautious sell for liquid instruments - attempts to
-#         short everything as long as PNL is positive
-num_to_sell <- function (num_stocks,position,min_limit,price){
+# @desc - cautious sell for liquid instruments - attempts only to
+#         short everything only if profit can be made 
+num_to_sell <- function (num_stocks,cost,price){
   if (num_stocks>0){
-    # if we have more than one stock and position limit won't be breached
-    projected_pnl = position - num_stocks*price;
-    if (projected_pnl>min_limit){
+    # if we have more than one stock and cost limit won't be breached
+    projected_cost = cost - num_stocks*price;
+    print(paste("projected_cost(",projected_cost,")=cost(",cost,")-num_stocks(",num_stocks,")*price(",price,")"))
+    if (projected_cost<0){
       # sell all owned stocks
       return(num_stocks);
     } else {
+      # or sell nothing
       return (0);
     }
     
@@ -31,16 +34,16 @@ num_to_sell <- function (num_stocks,position,min_limit,price){
 }
 
 
-updateStash <- function (stash,position,num_stocks)
+updateStash <- function (stash,cost,num_stocks)
 {
   if (num_stocks==0){
-    if (position>0){
-      # empty position into stash
-      stash = stash + position;
-      position = 0 ;
+    if (cost<0){
+      # empty cost into stash
+      stash = stash - cost;
+      cost = 0 ;
     }
   }
-  return (list(position=position,stash=stash));
+  return (list(cost=cost,stash=stash));
   
 }
 get_pnl_vector <- function(date_vector,price_vector,signals,start_position,position_limit){
@@ -57,32 +60,32 @@ get_pnl_vector <- function(date_vector,price_vector,signals,start_position,posit
   if (length(date_vector) != length(signals)){
     stop("date_vector and signals must be of the same size");
   }
-  pnl=array();
-  # update num_stocks and position
-  position = 0;
+  # update num_stocks and cost
+  cost = 0;
+  cost_limit = position_limit ; # interprets position_limit as cost_limit
   num_stocks = 0;
   stash=0;
   for (i in seq(length(date_vector))){
     signal <- signals[i];
-    stash_update = updateStash(stash=stash,position=position,num_stocks=num_stocks);
+    stash_update = updateStash(stash=stash,cost=cost,num_stocks=num_stocks);
     stash = stash_update$stash;
-    position = stash_update$position;
+    cost = stash_update$cost;
     if (signal == 1){
       # buy
-      n = num_to_buy(position=position,position_limit=position_limit,price=price_vector[i]);
+      n = num_to_buy(cost=cost,cost_limit=cost_limit,price=price_vector[i]);
       num_stocks = num_stocks + n ; # the only way num_stocks increases
-      position = position + price_vector[i]*n;
+      cost = cost + price_vector[i]*n;
       print(date_vector[i])
-      print(paste("stash=",stash," num_stocks=",num_stocks, " signal=",signal," position=",position," traded=",n," price=",price_vector[i]));
+      print(paste("stash=",stash," num_stocks=",num_stocks, " signal=",signal," cost=",cost," traded=",n," price=",price_vector[i]));
     } else if (signal == -1)
     {
       # sell
       # when we are selling we don't need to worry about the number of units to be bought being a whole number
-      n = num_to_sell(num_stocks = num_stocks, position=position,min_limit=0,price=price_vector[i]);
+      n = num_to_sell(num_stocks = num_stocks, cost=cost,price=price_vector[i]);
       num_stocks = num_stocks -n;
-      position = position - price_vector[i]*n;
+      cost = cost - price_vector[i]*n;
       print(date_vector[i])
-      print(paste("stash=",stash," num_stocks=",num_stocks," signal=",signal," position=",position," traded=",n," price=",price_vector[i]));
+      print(paste("stash=",stash," num_stocks=",num_stocks," signal=",signal," cost=",cost," traded=",n," price=",price_vector[i]));
     }
     else if (signal ==0){
       print(paste("signal=",signal," traded=",0));
@@ -90,7 +93,6 @@ get_pnl_vector <- function(date_vector,price_vector,signals,start_position,posit
     } else{
       stop("Error in signal");
     }
-    pnl[i]=0;
   }
   
   return(0);
