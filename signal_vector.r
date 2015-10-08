@@ -10,7 +10,7 @@ get_signal_at_last_point <- function(date_vector,price_vector,tol) {
   }
   n <- length(price_vector);
   if (n>window_size) {
-    
+    print(paste("Using data from:",date_vector[1]," to ",date_vector[n]))
     print(paste("moving average=",mean(price_vector[n-ma_size:n])));
     print(paste("last_price=",price_vector[n]));
     
@@ -57,7 +57,8 @@ get_signal_vector <- function(date_vector,price_vector) {
   tol <- .005
   for ( i in seq(length(date_vector))) {
     # use different functions for different signal calculation criteria
-    signals[i] = get_signal_at_last_point(date_vector=date_vector[1:i],price_vector=price_vector[1:i],tol=tol);    
+    signals[i] = get_signal_at_last_point(date_vector=date_vector[1:(i-1)],price_vector=price_vector[1:(i-1)],tol=tol);
+    print(paste("signal for ",date_vector[i], " was ", signals[i], " price today: ",price_vector[i]  ));
   }
   
   return(signals);
