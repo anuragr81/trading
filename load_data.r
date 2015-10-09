@@ -32,10 +32,10 @@ if (!is.na(start_date) && !is.na(end_date) ){
   dat = dat[dat$date<=end_date & dat$date>=start_date,]
   #get signal vector
   signals = get_signal_vector(date_vector=dat$date,price_vector=dat$Close)
-  plot_signals(date_vector=dat$date,
-               open_prices_vector=dat$Open,
-               close_prices_vector=dat$Close,
-               signals=signals);
+  #plot_signals(date_vector=dat$date,
+  #             open_prices_vector=dat$Open,
+  #             close_prices_vector=dat$Close,
+  #             signals=signals);
   stop("DONE")
   #get projected PNL
   profit=get_pnl_vector(date_vector=dat$date,price_vector=dat$Close,signals=signals,start_position=0,position_limit=10000);

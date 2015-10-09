@@ -10,6 +10,11 @@ get_vol_signal_at_last_point <- function(date_vector,price_vector,tol) {
     stop("must have ma_size <= window_size")
   }
   n <- length(price_vector);
+  
+  status=list();
+  status$signal=0;
+  status$vector=c(0,0,0);
+  
   if (n>window_size) {
     print(paste("Using data from:",date_vector[1]," to ",date_vector[n]))
     print(paste("last_price=",price_vector[n]));
@@ -19,44 +24,12 @@ get_vol_signal_at_last_point <- function(date_vector,price_vector,tol) {
     signs = (sign(last_diffs))
     print(paste("price=",toString(price_vector[(n-3):n])))
     print(paste("signs=",toString(signs)))
-    
-    if (sum(signs-c(-1,-1,-1))==0){
-      #would go up so sell
-      return(-1);
-    }
-    if (sum(signs!=c(-1,-1,1))==0){
-      #would go down so buy
-      return(1);
-    }
-    if (sum(signs-c(-1,1,-1))==0){
-      #no sure - do nothing
-      return(0);
-    }
-    if (sum(signs-c(-1,1,1))==0){
-      # would go down so buy
-      return(1);
-    }
-    if (sum(signs-c(1,-1,-1))==0){
-      #would go up so sell
-      return(-1);
-    }
-    if (sum(signs-c(1,-1,1))==0){
-      #would go down so buy
-      return(1);
-    }
-    if (sum(signs-c(1,1,-1))==0){
-      #would go up so sell
-      return(-1);
-    }
-    if (sum(signs-c(1,1,1))==0){
-      #would go down so buy
-      return(-1);
-    }
-    
-    #stop("DONE")
-    # if condition is met (if price hits below mean-average then buy)
+    status$vector=signs;  
     
   }
+  
+  return(status);
+  
   return(0);
 }
 
@@ -105,12 +78,26 @@ get_signal_vector <- function(date_vector,price_vector) {
   }
   signals = array();
   tol <- .005
+  test_results=list();
   for ( i in seq(length(date_vector))) {
     # use different functions for different signal calculation criteria
-    signals[i] = get_vol_signal_at_last_point(date_vector=date_vector[1:(i-1)],price_vector=price_vector[1:(i-1)],tol=tol);
+    
+    status = get_vol_signal_at_last_point(date_vector=date_vector[1:(i-1)],price_vector=price_vector[1:(i-1)],tol=tol);
+    signals[i] =status$signal;
+    ## populating test_results<start>
+    if (length(names(test_results)[names(test_results)==toString(status$vector)])==0){
+      #print(paste(toString(status$vector)," DOES NOT EXIST"));
+      test_results[[toString(status$vector)]]=c(price_vector[i]-price_vector[i-1]);
+    }
+    else{
+      print(paste(toString(status$vector),"EXISTS"));
+      test_results[[toString(status$vector)]]=c(test_results[[toString(status$vector)]],price_vector[i]-price_vector[i-1])
+    }
     print(paste("signal for ",date_vector[i], " was ", signals[i], " price today: ",price_vector[i]  ));
   }
+  ## populating test_results<end>
   
+  print(test_results);
   return(signals);
   
 }
