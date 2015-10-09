@@ -17,31 +17,40 @@ get_vol_signal_at_last_point <- function(date_vector,price_vector,tol) {
     sz_diff_price_vector = length(diff_price_vector)
     last_diffs = (diff_price_vector[(sz_diff_price_vector-2):sz_diff_price_vector])
     signs = (sign(last_diffs))
+    print(paste("price=",toString(price_vector[(n-3):n])))
     print(paste("signs=",toString(signs)))
     
     if (sum(signs-c(-1,-1,-1))==0){
-      return(1);
+      #would go up so sell
+      return(-1);
     }
     if (sum(signs!=c(-1,-1,1))==0){
+      #would go down so buy
       return(1);
     }
     if (sum(signs-c(-1,1,-1))==0){
-      return(-1);
+      #no sure - do nothing
+      return(0);
     }
     if (sum(signs-c(-1,1,1))==0){
+      # would go down so buy
       return(1);
     }
     if (sum(signs-c(1,-1,-1))==0){
+      #would go up so sell
       return(-1);
     }
     if (sum(signs-c(1,-1,1))==0){
+      #would go down so buy
       return(1);
     }
     if (sum(signs-c(1,1,-1))==0){
+      #would go up so sell
       return(-1);
     }
     if (sum(signs-c(1,1,1))==0){
-      return(1);
+      #would go down so buy
+      return(-1);
     }
     
     #stop("DONE")

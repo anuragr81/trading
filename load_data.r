@@ -1,9 +1,9 @@
 plot_signals <- function(date_vector,open_prices_vector,close_prices_vector,signals){
   par(mfrow=c(2,2))
-  plot(date_vector,open_prices_vector,'l');
-  #plot(date_vector,c(0,diff(close_prices_vector)),type='l')
-  plot(date_vector,signals,type='l')
-  plot(date_vector,(close_prices_vector-open_prices_vector),type='l')
+  plot(date_vector,close_prices_vector,'o');
+  plot(date_vector,signals,type='o')
+  #plot(date_vector,(close_prices_vector-open_prices_vector),type='o')
+  plot(date_vector,c(0,diff(close_prices_vector)),type='o')
   plot(signals,(close_prices_vector-open_prices_vector));
   res=lm((close_prices_vector-open_prices_vector)~signals)
   abline(res);
