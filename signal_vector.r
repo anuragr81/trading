@@ -96,8 +96,19 @@ get_signal_vector <- function(date_vector,price_vector) {
     print(paste("signal for ",date_vector[i], " was ", signals[i], " price today: ",price_vector[i]  ));
   }
   ## populating test_results<end>
+  # plotting test_results <start>
+  len_signals = length(names(test_results));
+  #             toString(summary(res)$coef[,"t value"][2]),
   
-  print(test_results);
+  print(paste("total number of signs: ",len_signals))
+  par(mfrow=c(floor(len_signals/5)+1,5))
+  for (i in seq(len_signals)){
+    plot(test_results[[i]],xlab=
+           paste(names(test_results)[i],"(sd=",sd(test_results[[i]]),")")
+                 )
+    #abline(res)
+  }
+  # plotting test_results <end>
   return(signals);
   
 }
